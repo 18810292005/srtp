@@ -42,11 +42,15 @@ class MainWin(QWidget):
         # 建立连接用户名输入框
         label2 = QLabel('连接用户名：')
         label2.setFont(font)
-        name = QLineEdit('zll')
+        name = QLineEdit('zhuangyu')
         # 建立密码认证输入框
         label3 = QLabel('密码认证：')
         label3.setFont(font)
         password = QLineEdit('Xyk-123456')
+        # 建立连接设置名输入框
+        label4 = QLabel('连接设置名')
+        label4.setFont(font)
+        connectname = QLineEdit('new VPN connect')
         # 建立连接按钮
         btn1 = QPushButton('连接', self)
         # 按钮添加图标
@@ -64,10 +68,19 @@ class MainWin(QWidget):
             cmds = [
                 "2",
                 "",
-                "AccountConnect",
-                "new VPN connect"
-                "AccountStatusGet"
-                "new VPN connect"
+                "AccountCreate",
+                connectname.text(),
+                address.text(),
+                "VPN121",
+                name.text(),
+                "VPN Client Adapter - VPN",
+                #"AccountPasswordSet",
+                #connectname.text(),
+                # password.text(),
+                # password.text(),
+                # "standard",
+                # "AccountConnect",
+                # "new VPN connect"
             ]
 
             for m in cmds:
@@ -84,60 +97,36 @@ class MainWin(QWidget):
                 # out = p1.stdout.readline().strip()
                 # if out:
                 # print(out.decode())
-            print(p1.returncode)
-            # else:
-            # print("fail")
+                print(p1.returncode)
+            else:
+                print("fail")
+
+            import os;
+            # popen返回文件对象，跟open操作一样
+            f = os.popen(r"python d:\pycharm\lianxi\client.py", "r")
+            shuchu = f.read()
+            f.close()
+
+            print(shuchu)  # cmd输出结果
+
+            # 输出结果字符串处理
+            s = shuchu.split("\n")  # 切割换行
+            new = [x for x in s if x != '']  # 去掉空''
+            print(new)
 
 
-"""
-# 自动跑输入命令
-import pyautogui
-pyautogui.typewrite(["enter"], '0.25')
 
-# 暂停5秒，定位应用界面
-
-import time
-time.sleep(5)
-# 获取应用坐标，通过鼠标位置获取
-# 获取鼠标位置
-x, y = pyautogui.position()
-# 输入命令
-for i in cmds:
-    
-    # 解决CMD中中文不可用情况，使用右键复制
-    
-    # 放置到剪贴板
-    import pyperclip
-    pyperclip.copy(i)
-    # 右键粘贴命令
-    pyautogui.click(x=x, y=y, button='right')
-    time.sleep(0.5)
-    # pyautogui.typewrite([x for x in i], '0.25')
-    pyautogui.typewrite(["enter"], '0.25')
-"""
-
-btn1.clicked.connect(on_btn1_clicked)
-
-# 建立断开按钮
-btn2 = QPushButton('断开', self)
+        btn1.clicked.connect(on_btn1_clicked)
 
 
-def on_btn2_clicked():
-    app_dir = "C:\Windows\System32\\vpncmd.exe"
-    import os
-    os.startfile(app_dir)
-    # 执行命令列表
-    cmds = [
-        "2",
-        "",
-        "AccountDisconnect",
-        "新的 VPN 连接"
-    ]
+
+        """
     # 自动跑输入命令
     import pyautogui
     pyautogui.typewrite(["enter"], '0.25')
 
     # 暂停5秒，定位应用界面
+
     import time
     time.sleep(5)
     # 获取应用坐标，通过鼠标位置获取
@@ -145,9 +134,9 @@ def on_btn2_clicked():
     x, y = pyautogui.position()
     # 输入命令
     for i in cmds:
-        """
-         解决CMD中中文不可用情况，使用右键复制
-        """
+
+        # 解决CMD中中文不可用情况，使用右键复制
+
         # 放置到剪贴板
         import pyperclip
         pyperclip.copy(i)
@@ -156,23 +145,64 @@ def on_btn2_clicked():
         time.sleep(0.5)
         # pyautogui.typewrite([x for x in i], '0.25')
         pyautogui.typewrite(["enter"], '0.25')
+    """
 
+        # 建立断开按钮
+        btn2 = QPushButton('断开', self)
 
-btn2.clicked.connect(on_btn2_clicked)
+        def on_btn2_clicked():
+            app_dir = "C:\Windows\System32\\vpncmd.exe"
+            import os
+            os.startfile(app_dir)
+            # 执行命令列表
+            cmds = [
+                "2",
+                "",
+                "AccountDisconnect",
+                "新的 VPN 连接"
+            ]
+            # 自动跑输入命令
+            import pyautogui
+            pyautogui.typewrite(["enter"], '0.25')
+
+            # 暂停5秒，定位应用界面
+            import time
+            time.sleep(5)
+            # 获取应用坐标，通过鼠标位置获取
+            # 获取鼠标位置
+            x, y = pyautogui.position()
+            # 输入命令
+            for i in cmds:
+                """
+                解决CMD中中文不可用情况，使用右键复制
+                """
+                # 放置到剪贴板
+                import pyperclip
+                pyperclip.copy(i)
+                # 右键粘贴命令
+                pyautogui.click(x=x, y=y, button='right')
+                time.sleep(0.5)
+                # pyautogui.typewrite([x for x in i], '0.25')
+                pyautogui.typewrite(["enter"], '0.25')
+
+        btn2.clicked.connect(on_btn2_clicked)
 
 # 按钮布局（表单布局）
-grid = QGridLayout()
-grid.setSpacing(20)
-grid.addWidget(label1, 1, 0)
-grid.addWidget(address, 1, 1)
-grid.addWidget(label2, 2, 0)
-grid.addWidget(name, 2, 1)
-grid.addWidget(label3, 3, 0)
-grid.addWidget(password, 3, 1)
-grid.addWidget(btn1, 4, 0)
-grid.addWidget(btn2, 4, 2)
-self.setLayout(grid)
-self.show()
+        grid = QGridLayout()
+        grid.setSpacing(20)
+        grid.addWidget(label1, 1, 0)
+        grid.addWidget(address, 1, 1)
+        grid.addWidget(label2, 2, 0)
+        grid.addWidget(name, 2, 1)
+        grid.addWidget(label3, 3, 0)
+        grid.addWidget(password, 3, 1)
+        grid.addWidget(label4, 4, 0)
+        grid.addWidget(connectname, 4, 1)
+        grid.addWidget(btn1, 5, 0)
+        grid.addWidget(btn2, 5, 2)
+        self.setLayout(grid)
+        self.show()
+
 
 """
         self.initUI()  # 显示窗体内容
